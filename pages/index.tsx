@@ -14,10 +14,10 @@ const XCMTransactorDemo = () => {
 
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [value, setValue] = useState('');
-  const [data, setData] = useState('');
-  const [gasLimit, setGaslimit] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const [value, setValue] = useState('0');
+  const [data, setData] = useState('0x');
+  const [gasLimit, setGaslimit] = useState('0');
+  const [deadline, setDeadline] = useState('0');
   const [signature, setSignature] = useState({ r: '', s: '', v: '' });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -81,6 +81,7 @@ const XCMTransactorDemo = () => {
   };
 
   const createPermitMessageData = function (nonce) {
+    console.log(value);
     // Message to Sign
     const message = {
       from: from,
@@ -88,7 +89,7 @@ const XCMTransactorDemo = () => {
       value: value,
       data: data,
       gaslimit: gasLimit,
-      nonce: nonce.toString(),
+      nonce: nonce,
       deadline: deadline,
     };
 
@@ -168,7 +169,7 @@ const XCMTransactorDemo = () => {
 
       const provider = (await detectEthereumProvider({ mustBeMetaMask: true })) as any;
       const method = 'eth_signTypedData_v4';
-      const messageData = createPermitMessageData(nonce);
+      const messageData = createPermitMessageData(nonce.toString());
       const params = [from, messageData.typedData];
 
       provider.sendAsync(
@@ -257,7 +258,7 @@ const XCMTransactorDemo = () => {
               !Boolean(input.target.value.match(/^0x[0-9a-f]+$/i))
             ) {
               amount = ethers.utils.parseEther(input.target.value);
-              setValue(amount);
+              setValue(amount.toString());
             }
           }}
         >
