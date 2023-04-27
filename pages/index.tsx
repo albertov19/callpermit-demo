@@ -17,7 +17,6 @@ const XCMTransactorDemo = () => {
   const [value, setValue] = useState(BigInt(0));
   const [data, setData] = useState('');
   const [gasLimit, setGaslimit] = useState(BigInt(0));
-  const [nonce, setNonce] = useState(BigInt(0));
   const [deadline, setDeadline] = useState(BigInt(0));
   const [signature, setSignature] = useState({ r: '', s: '', v: '' });
   const [loading, setLoading] = useState(false);
@@ -68,7 +67,6 @@ const XCMTransactorDemo = () => {
           setAccount(ethers.utils.getAddress(accounts[0]));
           setFrom(ethers.utils.getAddress(accounts[0]));
           // Get Nonce
-          setNonce(await callPermitInstance().nonces(ethers.utils.getAddress(accounts[0])));
           setConnected(true);
         }
       }
@@ -82,7 +80,7 @@ const XCMTransactorDemo = () => {
     await checkMetamask();
   };
 
-  const createPermitMessageData = function () {
+  const createPermitMessageData = function (nonce) {
     // Message to Sign
     const message = {
       from: from,
@@ -166,9 +164,11 @@ const XCMTransactorDemo = () => {
     setErrorMessage('');
 
     try {
+      const nonce = await callPermitInstance().nonces(ethers.utils.getAddress(account));
+
       const provider = (await detectEthereumProvider({ mustBeMetaMask: true })) as any;
       const method = 'eth_signTypedData_v4';
-      const messageData = createPermitMessageData();
+      const messageData = createPermitMessageData(nonce);
       const params = [from, messageData.typedData];
 
       provider.sendAsync(
@@ -191,7 +191,7 @@ const XCMTransactorDemo = () => {
         }
       );
     } catch (err) {
-      console.log(err.message);
+      setErrorMessage(err.message);
     }
 
     setLoading(false);
