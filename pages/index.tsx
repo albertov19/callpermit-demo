@@ -251,8 +251,12 @@ const XCMTransactorDemo = () => {
           placeholder='Amount of tokens...'
           onChange={(input) => {
             let amount;
-            if (input.target.value) {
-              amount = ethers.utils.parseEther(input.target.value.toString());
+            if (
+              input.target.value &&
+              !isNaN(Number(input.target.value)) &&
+              !Boolean(input.target.value.match(/^0x[0-9a-f]+$/i))
+            ) {
+              amount = ethers.utils.parseEther(input.target.value);
               setValue(amount);
             }
           }}
