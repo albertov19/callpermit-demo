@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import * as ethers from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
+import callPermitInstance from '../web3/callpermit';
 
 const XCMTransactorDemo = () => {
   // Initial State
@@ -66,6 +67,8 @@ const XCMTransactorDemo = () => {
         if (accounts) {
           setAccount(ethers.utils.getAddress(accounts[0]));
           setFrom(ethers.utils.getAddress(accounts[0]));
+          // Get Nonce
+          setNonce(await callPermitInstance().nonces(ethers.utils.getAddress(accounts[0])));
           setConnected(true);
         }
       }
@@ -80,6 +83,7 @@ const XCMTransactorDemo = () => {
   };
 
   const createPermitMessageData = function () {
+    // Message to Sign
     const message = {
       from: from,
       to: to,
@@ -273,15 +277,6 @@ const XCMTransactorDemo = () => {
           placeholder='Gas limit for call...'
           onChange={(input) => {
             setGaslimit(BigInt(input.target.value));
-          }}
-        />
-        <br />
-        <Input
-          fluid
-          label={{ content: 'Nonce:' }}
-          placeholder='Nonce of address in CallPermit...'
-          onChange={(input) => {
-            setNonce(BigInt(input.target.value));
           }}
         />
         <br />
