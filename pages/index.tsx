@@ -182,13 +182,8 @@ const XCMTransactorDemo = () => {
           //console.log('Signature:' + JSON.stringify(result.result));
 
           const ethersSignature = ethers.utils.splitSignature(result.result);
-          const formattedSignature = {
-            r: ethersSignature.r,
-            s: ethersSignature.s,
-            v: ethersSignature.v,
-          };
 
-          setSignature(formattedSignature);
+          setSignature({ r: ethersSignature.r, s: ethersSignature.s, v: ethersSignature.v });
         }
       );
     } catch (err) {
@@ -319,7 +314,7 @@ const XCMTransactorDemo = () => {
       <br />
       <p>
         Don't judge the code :) as it is for demostration purposes only. You can check the source code &nbsp;
-        <a href='https://github.com/albertov19/transact-xcm-moonbeam-demo'>here</a>
+        <a href='https://github.com/albertov19/callpermit-demo'>here</a>
       </p>
       <br />
     </Container>
