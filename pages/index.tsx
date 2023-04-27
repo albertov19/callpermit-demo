@@ -18,7 +18,17 @@ const XCMTransactorDemo = () => {
   const [data, setData] = useState('0x');
   const [gasLimit, setGaslimit] = useState('0');
   const [deadline, setDeadline] = useState('0');
-  const [signature, setSignature] = useState({ r: '', s: '', v: '' });
+  const [signature, setSignature] = useState({
+    from: '',
+    to: '',
+    value: '',
+    data: '',
+    gasLimit: '',
+    deadline: '',
+    r: '',
+    s: '',
+    v: '',
+  });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -187,7 +197,17 @@ const XCMTransactorDemo = () => {
 
           const ethersSignature = ethers.utils.splitSignature(result.result);
 
-          setSignature({ r: ethersSignature.r, s: ethersSignature.s, v: ethersSignature.v.toString() });
+          setSignature({
+            from: account,
+            to: to,
+            value: value,
+            data: data,
+            gasLimit: gasLimit,
+            deadline: deadline,
+            r: ethersSignature.r,
+            s: ethersSignature.s,
+            v: ethersSignature.v.toString(),
+          });
         }
       );
     } catch (err) {
@@ -233,87 +253,104 @@ const XCMTransactorDemo = () => {
         </Menu.Menu>
       </Menu>
       <h2>Call Permit Demo</h2>
-      <div style={{ width: '50%' }}>
-        <Input
-          fluid
-          label={{ content: 'Contract Address:' }}
-          placeholder='Contract you are interacting with...'
-          onChange={(input) => {
-            let address = checkAddress(input.target.value);
-            setTo(address);
-          }}
-        />
-        <br />
-        <Input
-          fluid
-          labelPosition='right'
-          type='text'
-          placeholder='Amount of tokens...'
-          onChange={(input) => {
-            let amount;
-            if (
-              input.target.value &&
-              !isNaN(Number(input.target.value)) &&
-              !Boolean(input.target.value.match(/^0x[0-9a-f]+$/i))
-            ) {
-              amount = ethers.utils.parseEther(input.target.value);
-              setValue(amount.toString());
-            }
-          }}
-        >
-          <Label>Value:</Label>
-          <input />
-          <Label>DEV</Label>
-        </Input>
-        <br />
-        <Input
-          fluid
-          label={{ content: 'Data:' }}
-          placeholder='Data...'
-          onChange={(input) => {
-            if (input.target.value) {
-              setData(input.target.value);
-            }
-          }}
-        />
-        <br />
-        <Input
-          fluid
-          label={{ content: 'GasLimit:' }}
-          placeholder='Gas limit for call...'
-          onChange={(input) => {
-            if (input.target.value) {
-              setGaslimit(input.target.value);
-            }
-          }}
-        />
-        <br />
-        <Input
-          fluid
-          label={{ content: 'Deadline:' }}
-          placeholder='Deadline for call...'
-          onChange={(input) => {
-            if (input.target.value) {
-              setDeadline(input.target.value);
-            }
-          }}
-        />
-      </div>
+      {{ connected }.connected ? (
+        <div style={{ width: '50%' }}>
+          <Input
+            fluid
+            label={{ content: 'Contract Address:' }}
+            placeholder='Contract you are interacting with...'
+            onChange={(input) => {
+              let address = checkAddress(input.target.value);
+              setTo(address);
+            }}
+          />
+          <br />
+          <Input
+            fluid
+            labelPosition='right'
+            type='text'
+            placeholder='Amount of tokens...'
+            onChange={(input) => {
+              let amount;
+              if (
+                input.target.value &&
+                !isNaN(Number(input.target.value)) &&
+                !Boolean(input.target.value.match(/^0x[0-9a-f]+$/i))
+              ) {
+                amount = ethers.utils.parseEther(input.target.value);
+                setValue(amount.toString());
+              }
+            }}
+          >
+            <Label>Value:</Label>
+            <input />
+            <Label>DEV</Label>
+          </Input>
+          <br />
+          <Input
+            fluid
+            label={{ content: 'Data:' }}
+            placeholder='Data...'
+            onChange={(input) => {
+              if (input.target.value) {
+                setData(input.target.value);
+              }
+            }}
+          />
+          <br />
+          <Input
+            fluid
+            label={{ content: 'GasLimit:' }}
+            placeholder='Gas limit for call...'
+            onChange={(input) => {
+              if (input.target.value) {
+                setGaslimit(input.target.value);
+              }
+            }}
+          />
+          <br />
+          <Input
+            fluid
+            label={{ content: 'Deadline:' }}
+            placeholder='Deadline for call...'
+            onChange={(input) => {
+              if (input.target.value) {
+                setDeadline(input.target.value);
+              }
+            }}
+          />
+          <br />
+          <Form onSubmit={() => signData()} error={!!errorMessage}>
+            <Button type='submit' color='orange' loading={loading} disabled={!connected}>
+              Sign Data
+            </Button>
+            <Message style={{ width: '50%' }} error header='Oops!' content={errorMessage} />
+          </Form>
+          <h4>Signature:</h4>
+          <p>
+            from: {signature['from']}
+            <br />
+            to: {signature['to']}
+            <br />
+            value: {signature['value']}
+            <br />
+            data: {signature['data']}
+            <br />
+            gasLimit: {signature['gasLimit']}
+            <br />
+            deadline: {signature['deadline']}
+            <br />
+            v: {signature['v'].toString()}
+            <br />
+            r: {signature['r'].toString()}
+            <br />
+            s: {signature['s'].toString()}
+          </p>
+        </div>
+      ) : (
+        <h4>Connect Metamask</h4>
+      )}
       <br />
-      <Form onSubmit={() => signData()} error={!!errorMessage}>
-        <Button type='submit' color='orange' loading={loading} disabled={!connected}>
-          Sign Data
-        </Button>
-        <Message style={{ width: '50%' }} error header='Oops!' content={errorMessage} />
-      </Form>
-      <h4>Signature:</h4>
-      <p>
-        r: {signature['r'].toString()}
-        <br />
-        s: {signature['s'].toString()}
-        <br />
-        v: {signature['v'].toString()}
-      </p>
       <p>
         Don't judge the code :) as it is for demostration purposes only. You can check the source code &nbsp;
         <a href='https://github.com/albertov19/callpermit-demo'>here</a>
