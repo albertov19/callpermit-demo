@@ -183,7 +183,7 @@ const XCMTransactorDemo = () => {
 
           const ethersSignature = ethers.utils.splitSignature(result.result);
 
-          setSignature({ r: ethersSignature.r, s: ethersSignature.s, v: ethersSignature.v });
+          setSignature({ r: ethersSignature.r, s: ethersSignature.s, v: ethersSignature.v.toString() });
         }
       );
     } catch (err) {
@@ -228,7 +228,6 @@ const XCMTransactorDemo = () => {
           )}
         </Menu.Menu>
       </Menu>
-      <br />
       <h2>Call Permit Demo</h2>
       <div style={{ width: '50%' }}>
         <Input
@@ -302,7 +301,6 @@ const XCMTransactorDemo = () => {
         </Button>
         <Message style={{ width: '50%' }} error header='Oops!' content={errorMessage} />
       </Form>
-      <br />
       <h4>Signature:</h4>
       <p>
         r: {signature['r'].toString()}
@@ -311,7 +309,6 @@ const XCMTransactorDemo = () => {
         <br />
         v: {signature['v'].toString()}
       </p>
-      <br />
       <p>
         Don't judge the code :) as it is for demostration purposes only. You can check the source code &nbsp;
         <a href='https://github.com/albertov19/callpermit-demo'>here</a>
