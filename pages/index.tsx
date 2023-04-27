@@ -14,10 +14,10 @@ const XCMTransactorDemo = () => {
 
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [value, setValue] = useState(BigInt(0));
+  const [value, setValue] = useState('');
   const [data, setData] = useState('');
-  const [gasLimit, setGaslimit] = useState(BigInt(0));
-  const [deadline, setDeadline] = useState(BigInt(0));
+  const [gasLimit, setGaslimit] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [signature, setSignature] = useState({ r: '', s: '', v: '' });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -85,11 +85,11 @@ const XCMTransactorDemo = () => {
     const message = {
       from: from,
       to: to,
-      value: value.toString(),
+      value: value,
       data: data,
-      gaslimit: gasLimit.toString(),
+      gaslimit: gasLimit,
       nonce: nonce.toString(),
-      deadline: deadline.toString(),
+      deadline: deadline,
     };
 
     const typedData = JSON.stringify({
@@ -253,8 +253,8 @@ const XCMTransactorDemo = () => {
             let amount;
             if (input.target.value) {
               amount = ethers.utils.parseEther(input.target.value.toString());
+              setValue(amount);
             }
-            setValue(BigInt(amount));
           }}
         >
           <Label>Value:</Label>
@@ -267,7 +267,9 @@ const XCMTransactorDemo = () => {
           label={{ content: 'Data:' }}
           placeholder='Data...'
           onChange={(input) => {
-            setData(input.target.value);
+            if (input.target.value) {
+              setData(input.target.value);
+            }
           }}
         />
         <br />
@@ -276,7 +278,9 @@ const XCMTransactorDemo = () => {
           label={{ content: 'GasLimit:' }}
           placeholder='Gas limit for call...'
           onChange={(input) => {
-            setGaslimit(BigInt(input.target.value));
+            if (input.target.value) {
+              setGaslimit(input.target.value);
+            }
           }}
         />
         <br />
@@ -285,7 +289,9 @@ const XCMTransactorDemo = () => {
           label={{ content: 'Deadline:' }}
           placeholder='Deadline for call...'
           onChange={(input) => {
-            setDeadline(BigInt(input.target.value));
+            if (input.target.value) {
+              setDeadline(input.target.value);
+            }
           }}
         />
       </div>
