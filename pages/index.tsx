@@ -81,7 +81,6 @@ const XCMTransactorDemo = () => {
   };
 
   const createPermitMessageData = function (nonce) {
-    console.log(value);
     // Message to Sign
     const message = {
       from: from,
